@@ -61,7 +61,7 @@
 // https://github.com/PaulStoffregen/OneWire
 #include "OneWire.h"
 
-#define pin_onewire 3
+#define pin_onewire 2
 
 #define Comm Serial
 
@@ -261,22 +261,22 @@ void setup() {
   
   ds = new OneWire(pin_onewire);
     
-  Comm.println(F("classify_fake_DS18B20.ino version 2020/05/25"));
-  Comm.println();  
-  Comm.println(F("This sketch performs a minimal test to classify"));
-  Comm.print(F("  1-wire sensors attached to pin "));
-  Comm.print(pin_onewire, DEC);
-  Comm.println(F(" according to"));
-  Comm.println(F("  https://github.com/cpetrich/counterfeit_DS18B20/"));
-  Comm.println(F("  assuming they belong to one of the DS18B20"));
-  Comm.println(F("  Families in circulation in 2019."));
-  Comm.println(F("  The script evaluates the sensors based on their"));
-  Comm.println(F("  response to undocumented function codes."));
-  Comm.println(F("  Proceed at your own risk!"));
-  Comm.println();
-  Comm.println(F("  Make sure power pin is connected to either Vcc or GND."));
-  Comm.println(F("  Hit enter to start analysis."));
-  Comm.println();
+//  Comm.println(F("classify_fake_DS18B20.ino version 2020/05/25"));
+//  Comm.println();
+//  Comm.println(F("This sketch performs a minimal test to classify"));
+//  Comm.print(F("  1-wire sensors attached to pin "));
+//  Comm.print(pin_onewire, DEC);
+//  Comm.println(F(" according to"));
+//  Comm.println(F("  https://github.com/cpetrich/counterfeit_DS18B20/"));
+//  Comm.println(F("  assuming they belong to one of the DS18B20"));
+//  Comm.println(F("  Families in circulation in 2019."));
+//  Comm.println(F("  The script evaluates the sensors based on their"));
+//  Comm.println(F("  response to undocumented function codes."));
+//  Comm.println(F("  Proceed at your own risk!"));
+//  Comm.println();
+//  Comm.println(F("  Make sure power pin is connected to either Vcc or GND."));
+//  Comm.println(F("  Hit enter to start analysis."));
+//  Comm.println();
 }
 
 void loop() {
@@ -403,12 +403,12 @@ err_C:
     
   } // end iterate over all sensors
 
-//  if (sensor_count == 0) {
-//    // produce output so the user knows we tried (and failed)
-//    // to detect a sensor. May have forgotten the pull-up
-//    // resistor.
-//    Comm.println(F("No sensors detected."));
-//  }
+  if (sensor_count == 0) {
+    // produce output so the user knows we tried (and failed)
+    // to detect a sensor. May have forgotten the pull-up
+    // resistor.
+    Comm.println(F("No sensors detected."));
+  }
   
 //  Comm.println(F("-------------")); // indicate end
 
