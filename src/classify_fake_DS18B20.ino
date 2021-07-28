@@ -61,7 +61,7 @@
 // https://github.com/PaulStoffregen/OneWire
 #include "OneWire.h"
 
-#define pin_onewire 7
+#define pin_onewire 3
 
 #define Comm Serial
 
@@ -403,14 +403,14 @@ err_C:
     
   } // end iterate over all sensors
 
-  if (sensor_count == 0) {
-    // produce output so the user knows we tried (and failed)
-    // to detect a sensor. May have forgotten the pull-up
-    // resistor.
-    Comm.println(F("No sensors detected."));
-  }
+//  if (sensor_count == 0) {
+//    // produce output so the user knows we tried (and failed)
+//    // to detect a sensor. May have forgotten the pull-up
+//    // resistor.
+//    Comm.println(F("No sensors detected."));
+//  }
   
-  Comm.println(F("-------------")); // indicate end
+//  Comm.println(F("-------------")); // indicate end
 
 }
 #endif
