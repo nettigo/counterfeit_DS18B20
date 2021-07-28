@@ -1,3 +1,4 @@
+#ifdef CLASSIFY
 /*
  * Copyright 2020 Chris Petrich
  *
@@ -412,3 +413,4 @@ err_C:
   Comm.println(F("-------------")); // indicate end
 
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef DISCOVER
 /*
  * Copyright Chris Petrich
  *
@@ -342,3 +343,4 @@ void loop() {
   delay(1000);
   digitalWrite(pin_LED, digitalRead(pin_LED) == HIGH ? LOW : HIGH);
 }
+#endif
