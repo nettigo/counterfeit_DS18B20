@@ -287,11 +287,11 @@ void loop() {
   //  depending on terminal this typically
   //  means pushing 'enter'. We ignore
   //  everyting sent.
-  while (Comm.available())
-    Comm.read();  
-  while (!Comm.available());
-  while (Comm.available())
-    Comm.read();
+//  while (Comm.available())
+//    Comm.read();
+//  while (!Comm.available());
+//  while (Comm.available())
+//    Comm.read();
 
   int sensor_count = 0;
   ds->reset_search();
@@ -408,6 +408,9 @@ err_C:
     // to detect a sensor. May have forgotten the pull-up
     // resistor.
     Comm.println(F("No sensors detected."));
+    delay(200);
+  } else {
+      delay(1000);
   }
   
 //  Comm.println(F("-------------")); // indicate end
