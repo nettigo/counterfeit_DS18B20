@@ -1,7 +1,7 @@
 # Your DS18B20 temperature sensor is likely a fake, counterfeit, clone...
 ...unless you bought the chips directly from [Maxim Integrated](https://www.maximintegrated.com/en/products/sensors/DS18B20.html) (or Dallas Semiconductor in the old days), an [authorized distributor](https://www.maximintegrated.com/en/aboutus/contact-us/distributor-offices.html) (DigiKey, RS, Farnell, Mouser, etc.), or a big retailer, or you took exceptionally good care purchasing waterproofed DS18B20 probes. We bought over 1000 "waterproof" probes or bare chips from more than 70 different vendors on ebay, AliExpress, and online stores -big and small- in 2019. All of the probes bought on ebay and AliExpress contained counterfeit DS18B20 sensors, and almost all sensors bought on those two sites were counterfeit.
 
-> Author: Chris Petrich, 21 Feb 2021.
+> Author: Chris Petrich, 8 May 2022.
 > License: CC BY.
 > Source: https://github.com/cpetrich/counterfeit_DS18B20/
 
@@ -60,7 +60,7 @@ Hence, as of writing (2019), every fake sensor available does not comply with th
 
 Regarding (II), there is one pathetically simple test for differences with Maxim-produced DS18B20 sensors that apparently *all* counterfeit sensors fail \[5\]:
 * It is a fake if its ROM address does not follow the pattern 28-xx-xx-xx-xx-00-00-xx \[5\]. (Maxim's ROM is essentially a 48-bit counter with the most significant bits still at 0 \[5\].)
-Also, with the exception of rare Family A2, none of the fake sensors adjust reserved byte 6 in the scratchpad register correctly or respond correctly to undocumented function codes regarding the Trim values.
+Also, with the exception of rare Family A2 and Family E, none of the fake sensors adjust reserved byte 6 in the scratchpad register correctly. Only the fake sensors of Family A2 respond correctly to undocumented function codes regarding the Trim values.
 
 In addition to obvious implementation differences such as those listed above under (I) and (II), there are also side-channel data that can be used to separate implementations. For example, the time reported for a 12 bit-temperature conversion (as determined by polling for completion after function code 0x44 at room temperature) is characteristic for individual chips (reproducible to much better than 1% at constant temperature) and falls within distinct ranges determined by the circuit's internals \[5\]:
 * 11 ms: Family D1
@@ -86,7 +86,7 @@ Alternatively,
 Note that none of the points above give certainty that a particular DS18B20 is an authentic Maxim product, but if any of the tests above indicate "fake" then it is most defintely counterfeit \[5\].
 
 ## What families of DS18B20-like chips can I expect to encounter?
-In addition to DS18B20 originally produced by Dallas Semiconductor and continued by Maxim Integrated after they purchased Dallas (Family A1, below), there are TO-92 clones produced independently by at least 4 other companies as of 2019 (Families B1, B2, C, D) \[5\]. The separation into families is based on patterns in undocumented function codes that the chips respond to as similarities at that level are unlikely to be coincidental \[5\]. Chips of Family B1 seem to be produced by [GXCAS](http://www.galaxy-cas.com/) and calibrated and sold independently by GXCAS and [UMW](http://umw-ic.com/). Chips of Family B2 are produced by [Beijing 7Q Technology (7Q-Tek)](http://www.7qtek.com). Both UMW and 7Q-Tek have corresponding datasheets on their respective web pages. Family D1 seems to be fading from sight, having been replaced by Family D2. Chips of Family A2 were a rare find, behave surprisingly similar to authentic chips but have poor temperature accuracy.
+In addition to DS18B20 originally produced by Dallas Semiconductor and continued by Maxim Integrated after they purchased Dallas (Family A1, below), there are TO-92 clones produced independently by at least 5 other companies as of 2019 (Families B1, B2, C, D, E) \[5\]. The separation into families is based on patterns in undocumented function codes that the chips respond to as similarities at that level are unlikely to be coincidental \[5\]. Chips of Family B1 seem to be produced by [GXCAS](http://www.galaxy-cas.com/) and calibrated and sold independently by GXCAS and [UMW](http://umw-ic.com/). Chips of Family B2 are produced by [Beijing 7Q Technology (7Q-Tek)](http://www.7qtek.com). Both UMW and 7Q-Tek have corresponding datasheets on their respective web pages. Family D1 seems to be fading from sight, having been replaced by Family D2. Chips of Family A2 were a rare find, behave surprisingly similar to authentic chips but have poor temperature accuracy. Chips of Family E are a new addition to this page as of 2022.
 
 In our ebay purchases in 2018/19 of waterproof DS18B20 probes from China, Germany, and the UK, most lots had sensors of Family B1, while one in three purchases had sensors of Family D. None had sensors of Family A1 or C. Neither origin nor price were indicators of sensor Family. When purchasing DS18B20 chips in TO-92 package, Family D2 was clearly dominant with Family B2 coming in second, and a small likelihood of obtaining chips of Families A1 or C.
 
@@ -258,8 +258,8 @@ The chips follow the description of Family A1 above with the following exception
 * It is possible to send arbitrary content as ROM code and for bytes 5, 6, and 7 of the scratchpad register after undocumented function codes 0xA3 and 0x66, respectively \[5\]. The family code of the device can be changed \[5\].
 * Temperature errors up to 3 °C at 0 °C \[6\]. Very noisy data \[5\].
 * Polling after function code 0x44 indicates approx. 11 ms (eleven) for conversion regardless of measurement resolution \[5\].
-* Chips **contain a supercap rather than an EEPROM** to hold alarm and configuration settings \[5\]. I.e., the last temperature measurement and updates to the alarm registers are retained between power cycles that are not too long \[5\].
-	+ The supercap retains memory for several minutes unless the Vcc pin is connected to the GND pin, in which case memory retention is 5 to 30 seconds \[5\].
+* Chips **contain a high-value capacitor rather than an EEPROM** to hold alarm and configuration settings \[5\]. I.e., the last temperature measurement and updates to the alarm registers are retained between power cycles that are not too long \[5\].
+	+ The capacitor retains memory for several minutes unless the Vcc pin is connected to the GND pin, in which case memory retention is 5 to 30 seconds \[5\].
 * Chips are sensitive to the way power is applied \[5\]. E.g. to power up from all pins attached to GND, it seems to be a good idea to leave Data and power pin floating for a bit (e.g., 100 ms) before actually applying a voltage to the power pin and Data \[5\].
 * Initial temperature reading is 25 °C or the last reading before power-down \[5\]. Default alarm register settings differ from Family A1 (``0x55`` and ``0x05``) \[5\].
 
@@ -273,7 +273,7 @@ The chips follow the description of Family A1 above with the following exception
 - Example topmark: DALLAS 18B20 1827C4 +051AG
 - Indent mark: *none*
 
-### Family D2: Noisy Rubbish
+### Family D2: XSEC SE18B20, Noisy
 ***Obtained both probes and chips from a large number of vendors in 2019***
 * ROM patterns \[5\]: 28-tt-tt-79-97-ss-ss-crc, 28-tt-tt-94-97-ss-ss-crc, 28-tt-tt-79-A2-ss-ss-crc, 28-tt-tt-16-A8-ss-ss-crc, 28-tt-tt-56-B5-ss-ss-crc *(2020)*, 28-tt-tt-07-D6-ss-ss-crc *(2020)*
 * Scratchpad register ``<byte 7> == 0x66``, ``<byte 6> != 0x0c`` and ``<byte 5> != 0xff`` \[5\].
@@ -300,6 +300,22 @@ The chips follow the description of Family A1 above with the following exception
 - Example topmark: DALLAS 18B20 1943C4 +051AG
 - Example topmark: DALLAS 18B20 1828C4 +233AA
 - Example topmark: DALLAS 18B20 2008C4 +817AB *(2020)*
+- Example topmark: SE18B20 2130 *(2022)*
+- Indent mark: *none*
+
+### Family E: NOVOSENSE NS18B20
+***Obtained neither chips nor probes in 2019. Bought chips clearly marked NS18B20 in 2022***
+
+*This family has been added to the list as of 2022 and the characterization below is preliminary. The datasheet seems to suggest that the chips started production in 2019.*
+
+* ROM patterns \[5\]: 28-00-tt-tt-59-43-ss-crc
+* Scratchpad register ``<byte 6>`` acts like Family A1. I.e., ``<byte 6> = 0x10 – (<byte 0> & 0x0f)``.
+* The NS18B20 datasheet documents commands supporting a second scratchpad register designed to provide 2 byte EEPROM storage.
+* Does not return data on undocumented function codes 0x68 and 0x93.
+* 12 bit temperature conversion in 20 to 25 ms. (The NS18B20 datasheet specifies maximum 50 ms irrespective of resolution.)
+
+- Example ROM: 28 **-00-** 74-28 **-59-43-** 0F-7A
+- Example topmark: NS18B20 203B00
 - Indent mark: *none*
 
 ### Obsolete as of 2019
@@ -310,6 +326,8 @@ The chips follow the description of Family A1 above with the following exception
 	(apparently still sold to others in 2019 (cf. Issue [17](https://github.com/cpetrich/counterfeit_DS18B20/issues/17)))
 * ROM patterns \[5,11\]: 28-61-64-ss-ss-tt-tt-crc
 	- Example ROM: 28 **-61-64-** 11-8D-F1-15-DE
+
+	(appear to be Family C.) *(2022)*
 * ROM patterns \[5\]: 28-EE-tt-tt-ss-ss-ss-crc
 	- Example ROM: 28 **-EE-** 58-49-25-16-01-45 *(2020)*
 	- Example topmark: DALLAS 18B20 1619C4 +827AH *(2020)*
@@ -334,6 +352,12 @@ While it is unclear who designed or produced chips of Family A2, Family A2 appea
 * The QT18B20 datasheet claims that a temperature conversion takes <500 ms \[12\]. This is consistent with the actual behavior of Family A2. (While the UMW datasheet claims the same \[14\], one of the datasheets appears to have been used as a template for the other.)
 * According to the datasheet version history, the earliest version of the QT18B20 datasheet did not mention user-defined bytes \[12\]. Family A2 does not have user-defined bytes in the scratchpad register.
 * The die ciruit of Family A2 resembles the style of both the die of Family A1 (produced by Maxim) and the die of Family B2 (produced by 7Q-Tek). The die size is significantly different from Family A1, so it's not a Maxim-produced DS18B20.
+
+## XSEC SE18B20
+The SE18B20 is a DS18B20 clone of Xi'an Supermicro Electronics Co., Ltd., trading as XSEC (Family D2, and most likely also D1). *(2022)*
+
+## NOVOSENSE NS18B20
+The NS18B20 is a DS18B20 clone of Suzhou Novosense Microelectronics Co., Ltd. (Family E). *(2022)*
 
 ## MAX31820
 Maxim Integrated also produce the MAX31820 temperature sensor. The MAX31820 is a DS18B20 with limited supply voltage range (i.e. up to 3.7 V) and smaller temperature range of high accuracy \[1,8\]. Like the DS18B20, it uses one-wire family code 0x28 \[1,8\]. Preliminary investigations have not (yet) revealed a test to distinguish between DS18B20 of Family A1 and Maxim-produced MAX31820 in software \[5\].
@@ -385,7 +409,7 @@ Sensors or probes with authentic or cloned DS18B20 were purchased from the follw
 **Official Distributors:** Maxim Integrated, Digikey, Farnell, Mouser, RS Components
 **ebay:** 5hk1584, alice1101983, alphago-it, andnov73, areyourshop-003, b2cpowershop2010, bernard_netelectroshop, binggogo, careforyou123, cheaptronic24, christians-technik-shop, czb6721960, d-9845, deepenmind, diy-arduino, diybox, eckstein-komponente, enigma-component-shop, e\*shine, efectronics, ele-parts, fr_aurora, fzeroinestore, geekapparels, good-module, happybuddhatrading, hermann_shopp, icmarket2009, jk_parts, justpro, kingelectronics15, london_shoppings_1, lovesell2013, lucas89-8, makershop, mecklenburg8, modul_technik, moore_estates, nouteclab, \*orchid, polida2008, puretek-innovations, rammie_74, scuary1, sensesmart, sensus, sevenshop888, shenglongsi, sparco888, survy2014, tancredielettronica, umtmedia, worldchips, xiaolin4, xuan33_store, yantzlf
 **AliExpress:** All goods are free shipping Store, AOKIN DiyMaker, Cuiisw Module Store, Eiechip, Fantasy Electronic, FSXSEMI, Great-IT, Great Wall Electronics, HWA YEH, Liyuan Electronic, Mega Semiconductor, Red Yellow Store, RoarKit Store, Sensor World, SHENGSUN Sensor, Shenzhen High Quality Products, shop912692, TENSTAR, WAVGAT, Win win., YLGA, YX Electronic
-**Other:** Adafruit, AZ-Delivery, Banggood, Taizhou Best Electric Equipment, Conrad Electronic, DFRobot, DROK,  Elektroimportøren, Elfa Distrelec, Shanghai Jiutian Automation Equipment, Kjell & Company, LCSC, Dongguan Nangudi Electronics, Quest Components, Shenzhen RBD Sensor Technology, Reichelt Elektronik, Shenzhen Senstech Electronic Technology, SparkFun, TELMAL, Dongguan Tianrui Electronics, YourDuino
+**Other:** Adafruit, AZ-Delivery, Banggood, Taizhou Best Electric Equipment, Conrad Electronic, DFRobot, DROK,  Elektroimportøren, Elfa Distrelec, Shanghai Jiutian Automation Equipment, Kjell & Company, LCSC, Dongguan Nangudi Electronics, Quest Components, Shenzhen RBD Sensor Technology, Reichelt Elektronik, Shenzhen Senstech Electronic Technology, SparkFun, Tayda Electronics, TELMAL, Dongguan Tianrui Electronics, YourDuino
 
 ## References
 
